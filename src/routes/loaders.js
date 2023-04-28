@@ -48,6 +48,6 @@ const isOutOfDate = ( date ) => {
 		millisecondsDiff / (24 * 60 * 60 * 60)
 	)
 	
-	return daysDiff === 0 ? false : true;
+	return daysDiff === 0 ? true : true;
 
 }

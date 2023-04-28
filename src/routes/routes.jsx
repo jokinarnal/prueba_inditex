@@ -5,18 +5,15 @@ import {
 
 import { fetchPodcastList, fetchPodcastDetails, fetchPodcastEpisodeDetails } from "./loaders.js";
 
-import { Header } from "./../pages/common/Header.jsx";
-
 import { PodcastContext } from "./../PodcastContext.jsx";
 
 export const router = createBrowserRouter([
     {
       path: "/",
       loader: ({ request }) => {
-				console.log(PodcastContext);
 				return fetchPodcastList()
 			},
-      lazy: () => import("./../pages/podcast-list.jsx"),
+      lazy: () => import("../pages/podcast-list/podcast-list.jsx"),
     },
     {
       path: "/podcast/:podcastId",
@@ -30,11 +27,10 @@ export const router = createBrowserRouter([
 				},    
       ]
     },
-    
   ]);
 
 export const Router = () => {
-	return ( 
-		<RouterProvider router={router} /> 
+	return (
+    <RouterProvider router={router} /> 
 	)
 }	

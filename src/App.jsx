@@ -4,14 +4,18 @@ import { Router } from "./routes/routes.jsx";
 
 import { PodcastContext } from "./PodcastContext.jsx";
 
+import "./App.css";
+
 const App = () => {
   
   const [ loading, setLoading ] = useState(false)
   
   return (
-    <PodcastContext.Provider value={{loading, setLoading}}>
-      <Router />
-    </PodcastContext.Provider>    
+    <div className="pc-main-container">
+      <PodcastContext.Provider value={{loading, setLoading}}>
+        <Router />
+      </PodcastContext.Provider>    
+    </div>  
   );
 }
 
