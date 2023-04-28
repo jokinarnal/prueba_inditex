@@ -18,7 +18,7 @@ export const router = createBrowserRouter([
     {
       path: "/podcast/:podcastId",
       loader: ({ request, params }) => fetchPodcastDetails(params.podcastId),
-      lazy: () => import("./../pages/podcast-details.jsx"),
+      lazy: () => import("../pages/podcast-details/podcast-details.jsx"),
       children: [
         {
           path: "episode/:episodeId",

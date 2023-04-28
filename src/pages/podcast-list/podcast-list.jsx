@@ -8,8 +8,10 @@ import { PodcastItem } from "./podcast-item.jsx";
 
 const setPodcastFilteredList = (listData, filter, setPodcastFilterListData) => {
 
+  const lowerCaseFilter = filter.toLowerCase();
+
   let filteredList = filter.length > 0 ? 
-    listData.filter( podcastItem  => podcastItem['im:artist'].label.includes(filter) || podcastItem.title.label.includes(filter) ) :
+    listData.filter( podcastItem  => podcastItem['im:artist'].label.toLowerCase().includes(lowerCaseFilter) || podcastItem.title.label.toLowerCase().includes(lowerCaseFilter) ) :
     listData;
   setPodcastFilterListData(filteredList); 
   return;
@@ -37,6 +39,7 @@ export function Component(props) {
 
   return (
     <div className="podcast-list-container">
+      { filter }
       <Filter listLength={podcastFilterListData.length} filterText={filter} handleFilterChange={handleFilterChange} />
       { podcastFilterListData.length > 0 && 
         <div className="podcast-list-content">
