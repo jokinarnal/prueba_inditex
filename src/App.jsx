@@ -1,22 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Router } from "./routes/routes.jsx";
 
-import { PodcastContext } from "./PodcastContext.jsx";
-
 import "./App.css";
 
-const App = () => {
-  
-  const [ loading, setLoading ] = useState(false)
-  
-  return (
+const App = () => (
     <div className="pc-main-container">
-      <PodcastContext.Provider value={{loading, setLoading}}>
-        <Router />
-      </PodcastContext.Provider>    
+      <Router />
     </div>  
   );
-}
 
 export default App;

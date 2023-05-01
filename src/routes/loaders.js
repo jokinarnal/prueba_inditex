@@ -1,9 +1,8 @@
+// Loader de datos de la vista del listado de podcast 
 export const fetchPodcastList = async () => {
     
 	const podcastListLastQuery = localStorage.getItem("podcastListLastQuery");
 	const podcastList = localStorage.getItem("podcastList");
-	
-	localStorage.setItem("podcastListLastQuery", new Date() );
 	
 	return new Promise((resolveList, rejectList) => {
 
@@ -18,6 +17,7 @@ export const fetchPodcastList = async () => {
 					}	
 				})
 				.then(	data => {
+					localStorage.setItem("podcastListLastQuery", new Date() );
 					localStorage.setItem("podcastList", JSON.stringify(data) );
 					resolveList(data);
 				});
@@ -29,11 +29,12 @@ export const fetchPodcastList = async () => {
 
 }
 
-export const fetchPodcastDetails = async (podcastId = 1000) => {
+// Loader de datos de las vista de detalles de podcast y episodio
+export const fetchPodcastDetails = async ( podcastId = 1000, episodeId = -1 ) => {
     
 	const podcastDetails = localStorage.getItem("podcastDetails");
 	const podcastDetailsObject = podcastDetails === null ? {} : JSON.parse(podcastDetails);
-	const hasToFetchPodcastDetails = podcastDetailsObject.hasOwnProperty(`${podcastId}`) ? isOutOfDate(podcastDetailsObject.lastQuery) : true;
+	const hasToFetchPodcastDetails = podcastDetailsObject.hasOwnProperty(`${podcastId}`) ? isOutOfDate(podcastDetailsObject[`${podcastId}`].lastQuery) : true;
 
 	return new Promise((resolveDetails, rejectDetails) => {
 
@@ -47,36 +48,43 @@ export const fetchPodcastDetails = async (podcastId = 1000) => {
 						throw new Error('Network response was not ok.')
 					}	
 				})
-				.then(	data => {
+				.then( data => {
 
 					const dataObject = escapeJsonString(data.contents);
 					
-					const details = {
+					let details = {
 						resultsCount: dataObject.resultCount,
 						generalInfo: dataObject.results[0],
 						episodes: dataObject.results.filter( (dataItem, index ) => index !== 0 ),
-						lastQuery: new Date()
+						lastQuery: new Date(),
 					};
 
-					const podcastDetailsObjectToStore = { ...podcastDetailsObject, [`${podcastId}`]: details };
-					
+					let podcastDetailsObjectToStore = { ...podcastDetailsObject, [`${podcastId}`]: details };
+
 					localStorage.setItem("podcastDetails", JSON.stringify(podcastDetailsObjectToStore) );
-					resolveDetails(podcastDetailsObjectToStore[`${podcastId}`]);
+			
+					let podcastDetailsObjectForView = { ...{}, ...podcastDetailsObjectToStore[`${podcastId}`] };
+
+					if ( episodeId !== -1 ) {
+						podcastDetailsObjectForView.episodeId = episodeId;
+					}
+
+					resolveDetails(podcastDetailsObjectForView);
 				});
+
 		}	else {
-			resolveDetails(podcastDetailsObject[`${podcastId}`]);
+			
+			let podcastDetailsObjectForView = { ...{}, ...podcastDetailsObject[`${podcastId}`] };
+			
+			if ( episodeId !== -1 ) {
+				podcastDetailsObjectForView.episodeId = episodeId;
+			}
+
+			resolveDetails(podcastDetailsObjectForView);
 		}
 
 	}); 
 
-}
-
-/*export const fetchPodcastDetails = async (podcastId = 1000 ) => {
-    return fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://itunes.apple.com/lookup?id=${podcastId}&media=podcast&entity=podcastEpisode&limit=20`)}`)
-}*/
-
-export const fetchPodcastEpisodeDetails = async (episodeId = 1000 ) => {
-    return fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://itunes.apple.com/lookup?id=${episodeId}&media=podcast&entity=podcastEpisode&limit=20`)}`)
 }
 
 const isOutOfDate = ( date ) => {
@@ -91,7 +99,6 @@ const isOutOfDate = ( date ) => {
 	)
 
 	return daysDiff === 0 ? false : true;
-
 }
 
 const escapeJsonString = jsonString => {

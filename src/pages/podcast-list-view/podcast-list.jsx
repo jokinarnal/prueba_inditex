@@ -39,7 +39,6 @@ export function Component(props) {
 
   return (
     <div className="podcast-list-container">
-      { filter }
       <Filter listLength={podcastFilterListData.length} filterText={filter} handleFilterChange={handleFilterChange} />
       { podcastFilterListData.length > 0 && 
         <div className="podcast-list-content">
