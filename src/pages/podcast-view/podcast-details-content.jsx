@@ -1,5 +1,5 @@
 import React from "react";
-import { PodcastEpisodesTable } from "./podcast-episodes-table";
+import { PodcastEpisodesTable } from "./podcast-episodes-table.jsx";
 
 export const PodcastDetailsContent = ({...props}) => 
 	(<>
